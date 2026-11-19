@@ -4662,10 +4662,25 @@
     var msg = 'DONE: ' + all.length + ' films saved.';
     if (missing) msg += '\nWARNING: ' + missing + ' of ' + expected + ' films are missing.';
     stat(msg, 100);
+    var oldStop = document.getElementById('lbx-stop');
+    if (oldStop && oldStop.parentNode) {
+      var closeBtn = oldStop.cloneNode(true);
+      closeBtn.textContent = 'Close';
+      closeBtn.onclick = function () {
+        var panel = document.getElementById('lbx-ui');
+        if (panel && panel.parentNode) panel.parentNode.removeChild(panel);
+      };
+      oldStop.parentNode.replaceChild(closeBtn, oldStop);
+    }
     setTimeout(function () {
-      var b = document.getElementById('lbx-ui');
-      if (b) b.style.opacity = '0.45';
-    }, 9000);
+      var panel = document.getElementById('lbx-ui');
+      if (!panel) return;
+      panel.style.transition = 'opacity .3s ease';
+      panel.style.opacity = '0';
+      setTimeout(function () {
+        if (panel && panel.parentNode) panel.parentNode.removeChild(panel);
+      }, 350);
+    }, 3000);
   } catch (e) {
     stat('ERROR: ' + String((e && e.message) || e), 100);
   }
